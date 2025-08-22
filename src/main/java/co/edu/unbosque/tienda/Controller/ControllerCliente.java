@@ -26,15 +26,10 @@ public class ControllerCliente {
     public Cliente guardar(@RequestBody Cliente cliente) {
         return serviceCliente.guardar(cliente);
     }
-/*
+
     @PutMapping("/{id}")
     public Cliente actualizar(@PathVariable Long id, @RequestBody Cliente cliente) {
-        Cliente existente = serviceCliente.buscarPorId(id);
-        if (existente != null) {
-            cliente.setId(id);
-            return serviceCliente.guardar(cliente);
-        }
-        return null;
+        return serviceCliente.guardar(cliente);
     }
 
     @DeleteMapping("/{id}")
@@ -42,5 +37,4 @@ public class ControllerCliente {
         serviceCliente.eliminar(id);
     }
 
- */
 }

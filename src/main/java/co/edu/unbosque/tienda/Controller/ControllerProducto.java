@@ -1,5 +1,6 @@
 package co.edu.unbosque.tienda.Controller;
 
+import co.edu.unbosque.tienda.Objects.Cliente;
 import co.edu.unbosque.tienda.Objects.Producto;
 import co.edu.unbosque.tienda.Service.ProductoService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,15 +27,10 @@ public class ControllerProducto {
     public Producto guardar(@RequestBody Producto producto) {
         return serviceProducto.guardar(producto);
     }
-/*
+
     @PutMapping("/{id}")
     public Producto actualizar(@PathVariable Long id, @RequestBody Producto producto) {
-        Producto existente = serviceProducto.buscarPorId(id);
-        if (existente != null) {
-            producto.setId(id);
-            return serviceProducto.guardar(producto);
-        }
-        return null;
+        return serviceProducto.guardar(producto);
     }
 
     @DeleteMapping("/{id}")
@@ -42,6 +38,5 @@ public class ControllerProducto {
         serviceProducto.eliminar(id);
     }
 
- */
 }
 

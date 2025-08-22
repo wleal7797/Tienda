@@ -1,9 +1,6 @@
 package co.edu.unbosque.tienda.Controller;
 
-import co.edu.unbosque.tienda.Service.ClienteService;
-import co.edu.unbosque.tienda.Service.EmpleadoService;
-import co.edu.unbosque.tienda.Service.ProductoService;
-import co.edu.unbosque.tienda.Service.InventarioService;
+import co.edu.unbosque.tienda.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,10 +16,13 @@ public class ControllerIndex {
     private ProductoService productoService;
 
     @Autowired
-    private InventarioService bodegaService;
+    private ProveedorService proveedorService;
 
     @Autowired
-    private EmpleadoService empleadoService;
+    private UsuarioService usuarioService;
+
+    @Autowired
+    private VentasService ventasService;
 
     @GetMapping("/")
     public String index(Model model) {
@@ -30,8 +30,11 @@ public class ControllerIndex {
 
         model.addAttribute("clientes", clienteService.listarTodos());
         model.addAttribute("productos", productoService.listarTodos());
-        model.addAttribute("inventarios", bodegaService.listarTodos());
-        model.addAttribute("empleados", empleadoService.listarTodos());
+        model.addAttribute("proveedores", proveedorService.listarTodos());
+        model.addAttribute("usuarios", usuarioService.listarTodos());
+        model.addAttribute("ventas", ventasService.listarTodos());
+
+
         return "index";
     }
 }
