@@ -1,30 +1,28 @@
 # ======================
 # Etapa 1: Build (Compilación)
 # ======================
-FROM maven:3.9.6-amazoncorretto-17 AS build
+FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /workspace
 
-# Copiar archivo pom.xml primero para cachear dependencias
-COPY pom.xml .
-RUN mvn -B -U -DskipTests dependency:go-offline
+# Copiar código fuente
+COPY . .
 
-# Copiar el código fuente
-COPY src ./src
-
-# Compilar el proyecto (sin ejecutar tests)
+# Compilar (sin tests para acelerar)
 RUN mvn clean package -DskipTests -B
+
 
 # ======================
 # Etapa 2: Runtime (Ejecución)
 # ======================
-FROM amazoncorretto:17-alpine
+FROM eclipse-temurin:17-jre-jammy
 WORKDIR /app
 
-# Copiar el JAR generado
+# Copiar el JAR desde la etapa de build
 COPY --from=build /workspace/target/*.jar app.jar
 
-# Exponer el puerto por defecto
+# Exponer puerto
 EXPOSE 8080
 
-# Comando de ejecución (Render asigna el puerto dinámicamente)
+# Render usa PORT dinámico
 ENTRYPOINT ["sh", "-c", "java -Dserver.port=${PORT:-8080} -jar app.jar"]
+
