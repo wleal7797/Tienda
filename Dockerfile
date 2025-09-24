@@ -14,7 +14,7 @@ RUN mvn clean package -DskipTests -B
 # ======================
 # Etapa 2: Runtime (Ejecución)
 # ======================
-FROM eclipse-temurin:17-jdk-jammy
+FROM openjdk:17-jdk-slim
 LABEL maintainer="andrewarquez2207@gmail.com"
 
 # Crear usuario no-root
@@ -23,9 +23,8 @@ RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
 # Establecer directorio de trabajo
 WORKDIR /app
 
-
 # Copiar el JAR generado desde la etapa de build
-COPY --from=build /workspace/target/tienda-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=build /workspace/target/*.jar app.jar
 
 # Cambiar permisos
 RUN chown appuser:appgroup app.jar
