@@ -19,10 +19,12 @@
 
     <properties>
         <java.version>17</java.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     </properties>
 
     <dependencies>
-        <!-- Web (controladores REST y vistas Thymeleaf) -->
+        <!-- Web (REST + MVC + Thymeleaf) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -69,8 +71,15 @@
     </dependencies>
 
     <build>
-        <plugins>
+        <!-- Copiar resources sin filtrado -->
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>false</filtering>
+            </resource>
+        </resources>
 
+        <plugins>
             <!-- Compilador -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -89,7 +98,7 @@
                 </configuration>
             </plugin>
 
-            <!-- Native build (opcional) -->
+            <!-- Native build (opcional, puedes quitarlo si no lo usas) -->
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
@@ -108,7 +117,6 @@
                     </excludes>
                 </configuration>
             </plugin>
-
         </plugins>
     </build>
 
