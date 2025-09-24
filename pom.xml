@@ -89,7 +89,6 @@
                 </configuration>
             </plugin>
 
-
             <!-- Native build (opcional) -->
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
