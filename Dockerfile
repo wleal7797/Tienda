@@ -23,6 +23,7 @@ RUN addgroup --system appgroup && adduser --system appuser --ingroup appgroup
 # Establecer directorio de trabajo
 WORKDIR /app
 
+
 # Copiar el JAR generado desde la etapa de build
 COPY --from=build /workspace/target/tienda-0.0.1-SNAPSHOT.jar app.jar
 
