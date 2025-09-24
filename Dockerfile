@@ -24,7 +24,7 @@ RUN mvn clean package -DskipTests -B
 # Etapa 2: Runtime (Ejecución)
 # ======================
 FROM openjdk:17-jdk-slim
-LABEL maintainer="tu-correo@ejemplo.com"
+LABEL maintainer="andrewarquez2207@gmail.com"
 
 # Forzar UTF-8 en runtime también
 ENV LANG=C.UTF-8 \
