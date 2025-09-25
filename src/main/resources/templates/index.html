@@ -669,8 +669,7 @@
     }
 
     function limpiarCampos() {
-        // CORREGIDO: Selector mejorado para limpiar campos
-        document.querySelectorAll("#modal input:not([type='hidden']), #modal select").forEach(el => {
+        document.querySelectorAll("#modal-fields input, #modal-fields select, .form-control").forEach(el => {
             if (el.type !== 'hidden') {
                 el.value = "";
             }
@@ -707,11 +706,9 @@
         let method = id ? "PUT" : "POST";
         let body = {};
 
-        // CORREGIDO: Recoger campos de forma más precisa
+        // Recoger todos los campos del formulario activo con el prefijo correcto
         const prefijo = entidad + "-";
-        const camposFormulario = document.querySelectorAll("#fields-" + entidad + " input, #fields-" + entidad + " select");
-
-        camposFormulario.forEach(el => {
+        document.querySelectorAll("#fields-" + entidad + " input, #fields-" + entidad + " select").forEach(el => {
             if(el.value && el.id.startsWith(prefijo)) {
                 const campo = el.id.replace(prefijo, '');
                 body[campo] = el.value;
@@ -719,35 +716,33 @@
         });
 
         // Transformar datos según la entidad
+        if(entidad === "venta") {
+            body = {
+                fecha: body.fecha,
+                precioVenta: parseFloat(body.precioVenta) || 0,
+                cliente: { id: parseInt(body.clienteId) },
+                producto: { id: parseInt(body.productoId) }
+            };
+        } else if(entidad === "proveedor") {
+            body = {
+                Nombre: body.Nombre,
+                Telefono: body.Telefono,
+                producto: { id: parseInt(body.productoId) }
+            };
+        } else if(entidad === "producto") {
+            body = {
+                nombre: body.nombre,
+                precio: parseFloat(body.precio) || 0,
+                stockMinimo: parseInt(body.stockMinimo) || 0,
+                activo: body.activo === "true"
+            };
+        }
+
+        if(id) {
+            body.id = parseInt(id);
+        }
+
         try {
-            if(entidad === "venta") {
-                body = {
-                    fecha: body.fecha,
-                    precioVenta: parseFloat(body.precioVenta) || 0,
-                    cliente: { id: parseInt(body.clienteId) },
-                    producto: { id: parseInt(body.productoId) }
-                };
-            } else if(entidad === "proveedor") {
-                body = {
-                    Nombre: body.Nombre,
-                    Telefono: body.Telefono,
-                    producto: { id: parseInt(body.productoId) }
-                };
-            } else if(entidad === "producto") {
-                body = {
-                    nombre: body.nombre,
-                    precio: parseFloat(body.precio) || 0,
-                    stockMinimo: parseInt(body.stockMinimo) || 0,
-                    activo: body.activo === "true"
-                };
-            }
-
-            if(id) {
-                body.id = parseInt(id);
-            }
-
-            console.log("Enviando datos:", body); // Para debug
-
             const response = await fetch(url, {
                 method: method,
                 headers: {"Content-Type": "application/json"},
@@ -763,7 +758,6 @@
             }
         } catch(error) {
             alert("Error de conexión: " + error.message);
-            console.error("Error completo:", error);
         }
     };
 
@@ -777,84 +771,45 @@
                 'venta': 'ventas'
             };
 
-            console.log(`Cargando datos para ${entidad} con ID: ${id}`); // Debug
-
             const resp = await fetch("/" + endpoints[entidad] + "/" + id);
-            if(!resp.ok) {
-                throw new Error(`Error HTTP: ${resp.status}`);
-            }
+            if(!resp.ok) throw new Error("Error al cargar los datos");
 
             const data = await resp.json();
-            console.log("Datos cargados:", data); // Debug
-
             abrirModal(entidad);
             document.getElementById('modal-title').innerText = "Editar " + entidad;
             document.getElementById('id').value = data.id;
 
-            // CORREGIDO: Llenar campos básicos con validación
+            // Llenar campos básicos con el prefijo correcto
             const prefijo = entidad + "-";
-
-            // Llenar campos básicos
             Object.keys(data).forEach(k => {
                 const element = document.getElementById(prefijo + k);
-                if(element && data[k] !== null && data[k] !== undefined && typeof data[k] !== 'object') {
+                if(element && typeof data[k] !== 'object') {
                     element.value = data[k];
                 }
             });
 
-            // CORREGIDO: Manejar relaciones específicas por entidad
+            // Manejar relaciones
             if(entidad === "venta") {
-                // Relaciones de venta
-                if(data.cliente && data.cliente.id) {
-                    const clienteSelect = document.getElementById('venta-clienteId');
-                    if(clienteSelect) clienteSelect.value = data.cliente.id;
-                }
-                if(data.producto && data.producto.id) {
-                    const productoSelect = document.getElementById('venta-productoId');
-                    if(productoSelect) productoSelect.value = data.producto.id;
-                }
-                // CORREGIDO: Formatear fecha correctamente
+                if(data.cliente) document.getElementById('venta-clienteId').value = data.cliente.id;
+                if(data.producto) document.getElementById('venta-productoId').value = data.producto.id;
+                // Formatear fecha si es necesario
                 if(data.fecha) {
-                    const fechaInput = document.getElementById('venta-fecha');
-                    if(fechaInput) {
-                        // Manejar diferentes formatos de fecha
-                        let fechaFormateada;
-                        if(data.fecha.includes('T')) {
-                            fechaFormateada = data.fecha.split('T')[0];
-                        } else if(data.fecha.includes('-')) {
-                            fechaFormateada = data.fecha;
-                        } else {
-                            // Si es otro formato, intentar crear fecha
-                            const fecha = new Date(data.fecha);
-                            fechaFormateada = fecha.toISOString().split('T')[0];
-                        }
-                        fechaInput.value = fechaFormateada;
-                    }
+                    const fecha = new Date(data.fecha);
+                    const fechaFormateada = fecha.toISOString().split('T')[0];
+                    document.getElementById('venta-fecha').value = fechaFormateada;
                 }
             } else if(entidad === "proveedor") {
-                // CORREGIDO: Campos específicos del proveedor
-                if(data.Nombre) {
-                    const nombreInput = document.getElementById('proveedor-Nombre');
-                    if(nombreInput) nombreInput.value = data.Nombre;
-                }
-                if(data.Telefono) {
-                    const telefonoInput = document.getElementById('proveedor-Telefono');
-                    if(telefonoInput) telefonoInput.value = data.Telefono;
-                }
-                if(data.producto && data.producto.id) {
-                    const productoSelect = document.getElementById('proveedor-productoId');
-                    if(productoSelect) productoSelect.value = data.producto.id;
-                }
+                if(data.Nombre) document.getElementById('proveedor-Nombre').value = data.Nombre;
+                if(data.Telefono) document.getElementById('proveedor-Telefono').value = data.Telefono;
+                if(data.producto) document.getElementById('proveedor-productoId').value = data.producto.id;
             }
-
         } catch(error) {
             alert("Error al cargar los datos: " + error.message);
-            console.error("Error completo:", error);
         }
     }
 
     async function eliminar(entidad, id) {
-        if(confirm(`¿Seguro que deseas eliminar este ${entidad}?`)) {
+        if(confirm("¿Seguro que deseas eliminar este " + entidad + "?")) {
             try {
                 const endpoints = {
                     'cliente': 'clientes',
@@ -864,22 +819,14 @@
                     'venta': 'ventas'
                 };
 
-                console.log(`Eliminando ${entidad} con ID: ${id}`); // Debug
-
-                const response = await fetch("/" + endpoints[entidad] + "/" + id, {
-                    method: "DELETE"
-                });
-
+                const response = await fetch("/" + endpoints[entidad] + "/" + id, {method: "DELETE"});
                 if(response.ok) {
-                    console.log("Eliminación exitosa"); // Debug
                     location.reload();
                 } else {
-                    const errorText = await response.text();
-                    alert("Error al eliminar: " + errorText);
+                    alert("Error al eliminar");
                 }
             } catch(error) {
                 alert("Error de conexión: " + error.message);
-                console.error("Error completo:", error);
             }
         }
     }
