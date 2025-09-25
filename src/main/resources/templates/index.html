@@ -69,36 +69,13 @@
             gap: 5px;
         }
 
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
+        .btn-primary { background: #007bff; color: white; }
         .btn-primary:hover { background: #0056b3; }
-
-        .btn-edit {
-            background: #28a745;
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-
+        .btn-edit { background: #28a745; color: white; padding: 5px 10px; font-size: 12px; }
         .btn-edit:hover { background: #218838; }
-
-        .btn-delete {
-            background: #dc3545;
-            color: white;
-            padding: 5px 10px;
-            font-size: 12px;
-        }
-
+        .btn-delete { background: #dc3545; color: white; padding: 5px 10px; font-size: 12px; }
         .btn-delete:hover { background: #c82333; }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
+        .btn-secondary { background: #6c757d; color: white; }
         .btn-secondary:hover { background: #5a6268; }
 
         table {
@@ -454,7 +431,7 @@
     </div>
 </div>
 
-<!-- MODAL -->
+<!-- MODAL ÚNICO -->
 <div id="modal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
@@ -464,123 +441,17 @@
             </button>
         </div>
 
-        <form id="modal-form">
+        <div id="form-container">
             <input type="hidden" id="entidad">
             <input type="hidden" id="id">
 
-            <!-- Cliente -->
-            <div id="fields-cliente" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="cliente-nombre" class="form-control" id="cliente-nombre" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Documento</label>
-                    <input type="text" name="cliente-documento" class="form-control" id="cliente-documento" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" name="cliente-email" class="form-control" id="cliente-email" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Teléfono</label>
-                    <input type="text" name="cliente-telefono" class="form-control" id="cliente-telefono">
-                </div>
-            </div>
-
-            <!-- Producto -->
-            <div id="fields-producto" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="producto-nombre" class="form-control" id="producto-nombre" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Precio</label>
-                    <input type="number" name="producto-precio" class="form-control" id="producto-precio" step="0.01" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Stock Mínimo</label>
-                    <input type="number" name="producto-stockMinimo" class="form-control" id="producto-stockMinimo" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <select name="producto-activo" class="form-control" id="producto-activo" required>
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Proveedor -->
-            <div id="fields-proveedor" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="proveedor-Nombre" class="form-control" id="proveedor-Nombre" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Teléfono</label>
-                    <input type="text" name="proveedor-Telefono" class="form-control" id="proveedor-Telefono" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Producto</label>
-                    <select name="proveedor-productoId" class="form-control" id="proveedor-productoId" required>
-                        <option value="">Seleccione un producto</option>
-                        <option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}"></option>
-                    </select>
-                </div>
-            </div>
-
-            <!-- Usuario -->
-            <div id="fields-usuario" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Nombre</label>
-                    <input type="text" name="usuario-nombre" class="form-control" id="usuario-nombre" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Documento</label>
-                    <input type="text" name="usuario-documento" class="form-control" id="usuario-documento" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cargo</label>
-                    <input type="text" name="usuario-cargo" class="form-control" id="usuario-cargo" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Teléfono</label>
-                    <input type="text" name="usuario-telefono" class="form-control" id="usuario-telefono">
-                </div>
-            </div>
-
-            <!-- Venta -->
-            <div id="fields-venta" style="display:none">
-                <div class="form-group">
-                    <label class="form-label">Fecha</label>
-                    <input type="date" name="venta-fecha" class="form-control" id="venta-fecha" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Precio de Venta</label>
-                    <input type="number" name="venta-precioVenta" class="form-control" id="venta-precioVenta" min="0" required>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Cliente</label>
-                    <select name="venta-clienteId" class="form-control" id="venta-clienteId" required>
-                        <option value="">Seleccione un cliente</option>
-                        <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Producto</label>
-                    <select name="venta-productoId" class="form-control" id="venta-productoId" required>
-                        <option value="">Seleccione un producto</option>
-                        <option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}"></option>
-                    </select>
-                </div>
-            </div>
+            <div id="form-fields"></div>
 
             <div class="form-actions">
                 <button type="button" class="btn btn-secondary" onclick="cerrarModal()">Cancelar</button>
-                <button type="submit" class="btn btn-primary">Guardar</button>
+                <button type="button" class="btn btn-primary" onclick="guardar()">Guardar</button>
             </div>
-        </form>
+        </div>
     </div>
 </div>
 
@@ -591,6 +462,38 @@
         'proveedor': 'proveedores',
         'usuario': 'usuarios',
         'venta': 'ventas'
+    };
+
+    const campos = {
+        cliente: [
+            {id: 'nombre', label: 'Nombre', type: 'text', required: true},
+            {id: 'documento', label: 'Documento', type: 'text', required: true},
+            {id: 'email', label: 'Email', type: 'email', required: true},
+            {id: 'telefono', label: 'Teléfono', type: 'text', required: false}
+        ],
+        producto: [
+            {id: 'nombre', label: 'Nombre', type: 'text', required: true},
+            {id: 'precio', label: 'Precio', type: 'number', required: true, step: '0.01', min: '0'},
+            {id: 'stockMinimo', label: 'Stock Mínimo', type: 'number', required: true, min: '0'},
+            {id: 'activo', label: 'Estado', type: 'select', required: true, options: [{value: 'true', text: 'Activo'}, {value: 'false', text: 'Inactivo'}]}
+        ],
+        proveedor: [
+            {id: 'Nombre', label: 'Nombre', type: 'text', required: true},
+            {id: 'Telefono', label: 'Teléfono', type: 'text', required: true},
+            {id: 'productoId', label: 'Producto', type: 'select', required: true, options: 'productos'}
+        ],
+        usuario: [
+            {id: 'nombre', label: 'Nombre', type: 'text', required: true},
+            {id: 'documento', label: 'Documento', type: 'text', required: true},
+            {id: 'cargo', label: 'Cargo', type: 'text', required: true},
+            {id: 'telefono', label: 'Teléfono', type: 'text', required: false}
+        ],
+        venta: [
+            {id: 'fecha', label: 'Fecha', type: 'date', required: true},
+            {id: 'precioVenta', label: 'Precio de Venta', type: 'number', required: true, min: '0'},
+            {id: 'clienteId', label: 'Cliente', type: 'select', required: true, options: 'clientes'},
+            {id: 'productoId', label: 'Producto', type: 'select', required: true, options: 'productos'}
+        ]
     };
 
     function mostrarAlerta(mensaje, tipo = 'success') {
@@ -605,28 +508,87 @@
         document.getElementById('entidad').value = entidad;
         document.getElementById('id').value = '';
 
-        document.querySelectorAll('[id^="fields-"]').forEach(div => {
-            div.style.display = 'none';
-        });
-
-        document.getElementById(`fields-${entidad}`).style.display = 'block';
-        limpiarFormulario();
+        generarFormulario(entidad);
 
         if (entidad === 'venta') {
-            document.getElementById('venta-fecha').value = new Date().toISOString().split('T')[0];
+            document.getElementById('fecha').value = new Date().toISOString().split('T')[0];
+        }
+    }
+
+    function generarFormulario(entidad) {
+        const container = document.getElementById('form-fields');
+        container.innerHTML = '';
+
+        campos[entidad].forEach(campo => {
+            const formGroup = document.createElement('div');
+            formGroup.className = 'form-group';
+
+            const label = document.createElement('label');
+            label.className = 'form-label';
+            label.textContent = campo.label;
+            formGroup.appendChild(label);
+
+            let input;
+            if (campo.type === 'select') {
+                input = document.createElement('select');
+                input.className = 'form-control';
+
+                if (campo.options === 'productos') {
+                    input.innerHTML = '<option value="">Seleccione un producto</option>';
+                    // Productos serán cargados dinámicamente desde Thymeleaf
+                } else if (campo.options === 'clientes') {
+                    input.innerHTML = '<option value="">Seleccione un cliente</option>';
+                    // Clientes serán cargados dinámicamente desde Thymeleaf
+                } else if (Array.isArray(campo.options)) {
+                    input.innerHTML = campo.options.map(opt => `<option value="${opt.value}">${opt.text}</option>`).join('');
+                }
+            } else {
+                input = document.createElement('input');
+                input.type = campo.type;
+                input.className = 'form-control';
+                if (campo.step) input.step = campo.step;
+                if (campo.min) input.min = campo.min;
+            }
+
+            input.id = campo.id;
+            if (campo.required) input.required = true;
+
+            formGroup.appendChild(input);
+            container.appendChild(formGroup);
+        });
+
+        // Llenar selects con datos de Thymeleaf si están disponibles
+        if (entidad === 'proveedor' || entidad === 'venta') {
+            cargarOpcionesSelect();
+        }
+    }
+
+    function cargarOpcionesSelect() {
+        // Para productos
+        const productSelect = document.getElementById('productoId');
+        if (productSelect && window.productos) {
+            window.productos.forEach(p => {
+                const option = document.createElement('option');
+                option.value = p.id;
+                option.textContent = p.nombre;
+                productSelect.appendChild(option);
+            });
+        }
+
+        // Para clientes
+        const clientSelect = document.getElementById('clienteId');
+        if (clientSelect && window.clientes) {
+            window.clientes.forEach(c => {
+                const option = document.createElement('option');
+                option.value = c.id;
+                option.textContent = c.nombre;
+                clientSelect.appendChild(option);
+            });
         }
     }
 
     function cerrarModal() {
         document.getElementById('modal').classList.remove('show');
-    }
-
-    function limpiarFormulario() {
-        document.querySelectorAll('.form-control').forEach(input => {
-            if (input.id !== 'entidad' && input.id !== 'id') {
-                input.value = '';
-            }
-        });
     }
 
     async function editar(entidad, id) {
@@ -640,31 +602,19 @@
             document.getElementById('modal-title').textContent = `Editar ${entidad.charAt(0).toUpperCase() + entidad.slice(1)}`;
             document.getElementById('id').value = data.id;
 
-            if (entidad === 'cliente') {
-                document.getElementById('cliente-nombre').value = data.nombre || '';
-                document.getElementById('cliente-documento').value = data.documento || '';
-                document.getElementById('cliente-email').value = data.email || '';
-                document.getElementById('cliente-telefono').value = data.telefono || '';
-            } else if (entidad === 'producto') {
-                document.getElementById('producto-nombre').value = data.nombre || '';
-                document.getElementById('producto-precio').value = data.precio || '';
-                document.getElementById('producto-stockMinimo').value = data.stockMinimo || '';
-                document.getElementById('producto-activo').value = data.activo ? 'true' : 'false';
-            } else if (entidad === 'proveedor') {
-                document.getElementById('proveedor-Nombre').value = data.Nombre || '';
-                document.getElementById('proveedor-Telefono').value = data.Telefono || '';
-                document.getElementById('proveedor-productoId').value = data.producto ? data.producto.id : '';
-            } else if (entidad === 'usuario') {
-                document.getElementById('usuario-nombre').value = data.nombre || '';
-                document.getElementById('usuario-documento').value = data.documento || '';
-                document.getElementById('usuario-cargo').value = data.cargo || '';
-                document.getElementById('usuario-telefono').value = data.telefono || '';
-            } else if (entidad === 'venta') {
-                document.getElementById('venta-fecha').value = data.fecha || '';
-                document.getElementById('venta-precioVenta').value = data.precioVenta || '';
-                document.getElementById('venta-clienteId').value = data.cliente ? data.cliente.id : '';
-                document.getElementById('venta-productoId').value = data.producto ? data.producto.id : '';
-            }
+            // Llenar campos
+            campos[entidad].forEach(campo => {
+                const element = document.getElementById(campo.id);
+                if (element) {
+                    if (campo.id === 'productoId' && data.producto) {
+                        element.value = data.producto.id;
+                    } else if (campo.id === 'clienteId' && data.cliente) {
+                        element.value = data.cliente.id;
+                    } else if (data[campo.id] !== undefined) {
+                        element.value = data[campo.id];
+                    }
+                }
+            });
         } catch (error) {
             mostrarAlerta(`Error al cargar datos: ${error.message}`, 'danger');
         }
@@ -687,50 +637,29 @@
         }
     }
 
-    document.getElementById('modal-form').addEventListener('submit', async function(e) {
-        e.preventDefault();
-
+    async function guardar() {
         const entidad = document.getElementById('entidad').value;
         const id = document.getElementById('id').value;
         const esEdicion = !!id;
 
         let body = {};
 
-        if (entidad === 'cliente') {
-            body = {
-                nombre: document.getElementById('cliente-nombre').value,
-                documento: document.getElementById('cliente-documento').value,
-                email: document.getElementById('cliente-email').value,
-                telefono: document.getElementById('cliente-telefono').value
-            };
-        } else if (entidad === 'producto') {
-            body = {
-                nombre: document.getElementById('producto-nombre').value,
-                precio: parseFloat(document.getElementById('producto-precio').value),
-                stockMinimo: parseInt(document.getElementById('producto-stockMinimo').value),
-                activo: document.getElementById('producto-activo').value === 'true'
-            };
-        } else if (entidad === 'proveedor') {
-            body = {
-                Nombre: document.getElementById('proveedor-Nombre').value,
-                Telefono: document.getElementById('proveedor-Telefono').value,
-                producto: { id: parseInt(document.getElementById('proveedor-productoId').value) }
-            };
-        } else if (entidad === 'usuario') {
-            body = {
-                nombre: document.getElementById('usuario-nombre').value,
-                documento: document.getElementById('usuario-documento').value,
-                cargo: document.getElementById('usuario-cargo').value,
-                telefono: document.getElementById('usuario-telefono').value
-            };
-        } else if (entidad === 'venta') {
-            body = {
-                fecha: document.getElementById('venta-fecha').value,
-                precioVenta: parseInt(document.getElementById('venta-precioVenta').value),
-                cliente: { id: parseInt(document.getElementById('venta-clienteId').value) },
-                producto: { id: parseInt(document.getElementById('venta-productoId').value) }
-            };
-        }
+        campos[entidad].forEach(campo => {
+            const element = document.getElementById(campo.id);
+            if (element && element.value) {
+                if (campo.type === 'number') {
+                    body[campo.id] = campo.step === '0.01' ? parseFloat(element.value) : parseInt(element.value);
+                } else if (campo.id === 'activo') {
+                    body[campo.id] = element.value === 'true';
+                } else if (campo.id === 'productoId') {
+                    body.producto = { id: parseInt(element.value) };
+                } else if (campo.id === 'clienteId') {
+                    body.cliente = { id: parseInt(element.value) };
+                } else {
+                    body[campo.id] = element.value;
+                }
+            }
+        });
 
         if (esEdicion) {
             body.id = parseInt(id);
@@ -757,7 +686,7 @@
         } catch (error) {
             mostrarAlerta(`Error: ${error.message}`, 'danger');
         }
-    });
+    }
 
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') {
@@ -769,6 +698,41 @@
         if (e.target === this) {
             cerrarModal();
         }
+    });
+
+    // Cargar datos desde Thymeleaf al iniciar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Extraer datos de las tablas para usar en selects
+        window.productos = [];
+        window.clientes = [];
+
+        document.querySelectorAll('table').forEach(table => {
+            const headers = Array.from(table.querySelectorAll('th')).map(th => th.textContent.toLowerCase());
+
+            if (headers.includes('precio')) {
+                // Es tabla de productos
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        window.productos.push({
+                            id: cells[0].textContent,
+                            nombre: cells[1].textContent
+                        });
+                    }
+                });
+            } else if (headers.includes('email')) {
+                // Es tabla de clientes
+                table.querySelectorAll('tbody tr').forEach(row => {
+                    const cells = row.querySelectorAll('td');
+                    if (cells.length > 0) {
+                        window.clientes.push({
+                            id: cells[0].textContent,
+                            nombre: cells[1].textContent
+                        });
+                    }
+                });
+            }
+        });
     });
 </script>
 </body>
