@@ -318,10 +318,10 @@
                         <td th:text="${c.telefono}"></td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-edit" th:onclick="'editar(\'cliente\', ' + ${c.id} + ')'">
+                                <button class="btn btn-edit" onclick="editar('cliente', [[${c.id}]])">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-delete" th:onclick="'eliminar(\'cliente\', ' + ${c.id} + ')'">
+                                <button class="btn btn-delete" onclick="eliminar('cliente', [[${c.id}]])">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -370,10 +370,10 @@
                         </td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-edit" th:onclick="'editar(\'producto\', ' + ${p.id} + ')'">
+                                <button class="btn btn-edit" onclick="editar('producto', [[${p.id}]])">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-delete" th:onclick="'eliminar(\'producto\', ' + ${p.id} + ')'">
+                                <button class="btn btn-delete" onclick="eliminar('producto', [[${p.id}]])">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -413,10 +413,10 @@
                         <td th:text="${pr.producto != null ? pr.producto.nombre : 'Sin producto'}"></td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-edit" th:onclick="'editar(\'proveedor\', ' + ${pr.id} + ')'">
+                                <button class="btn btn-edit" onclick="editar('proveedor', [[${pr.id}]])">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-delete" th:onclick="'eliminar(\'proveedor\', ' + ${pr.id} + ')'">
+                                <button class="btn btn-delete" onclick="eliminar('proveedor', [[${pr.id}]])">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -458,10 +458,10 @@
                         <td th:text="${u.telefono}"></td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-edit" th:onclick="'editar(\'usuario\', ' + ${u.id} + ')'">
+                                <button class="btn btn-edit" onclick="editar('usuario', [[${u.id}]])">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-delete" th:onclick="'eliminar(\'usuario\', ' + ${u.id} + ')'">
+                                <button class="btn btn-delete" onclick="eliminar('usuario', [[${u.id}]])">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -503,10 +503,10 @@
                         <td th:text="${v.producto != null ? v.producto.nombre : 'Producto eliminado'}"></td>
                         <td>
                             <div class="actions">
-                                <button class="btn btn-edit" th:onclick="'editar(\'venta\', ' + ${v.id} + ')'">
+                                <button class="btn btn-edit" onclick="editar('venta', [[${v.id}]])">
                                     <i class="fas fa-edit"></i>
                                 </button>
-                                <button class="btn btn-delete" th:onclick="'eliminar(\'venta\', ' + ${v.id} + ')'">
+                                <button class="btn btn-delete" onclick="eliminar('venta', [[${v.id}]])">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
