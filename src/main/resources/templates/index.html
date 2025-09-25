@@ -2,209 +2,661 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Tienda - Index</title>
+    <title>Sistema de Gestión - Tienda</title>
     <link rel="stylesheet" href="/css/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        .table-container { margin: 20px 0; }
-        table { border-collapse: collapse; width: 100%; margin-top: 10px; }
-        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
-        th { background-color: #f2f2f2; }
-        button { padding: 5px 10px; margin: 2px; cursor: pointer; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .main-content { padding: 30px; }
+
+        .section {
+            margin-bottom: 50px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .section-title {
+            color: #495057;
+            font-size: 1.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-edit {
+            background: #28a745;
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-edit:hover { background: #218838; transform: scale(1.05); }
+
+        .btn-delete {
+            background: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            font-size: 12px;
+        }
+
+        .btn-delete:hover { background: #c82333; transform: scale(1.05); }
+
+        .table-container {
+            overflow-x: auto;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 14px;
+        }
+
+        tr:hover { background: #f8f9fa; }
+
+        .actions { display: flex; gap: 5px; }
+
         .modal {
-            display: none; position: fixed; top: 0; left: 0; width: 100%;
-            height: 100%; background: rgba(0,0,0,0.5); justify-content: center; align-items: center;
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.6);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
         }
+
+        .modal.show {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+
         .modal-content {
-            background: white; padding: 20px; border-radius: 8px; width: 400px;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 500px;
+            max-width: 90vw;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            animation: slideIn 0.3s ease;
         }
-        .modal-content input, select { width: 100%; margin: 5px 0; padding: 8px; }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #6c757d;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: #f8f9fa;
+            color: #dc3545;
+        }
+
+        .form-group { margin-bottom: 20px; }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover { background: #5a6268; }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @media (max-width: 768px) {
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+
+            .actions { flex-direction: column; }
+
+            th, td {
+                padding: 8px;
+                font-size: 12px;
+            }
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1 th:text="${mensaje}">Bienvenido a la Tienda</h1>
-    <hr/>
-
-    <!-- ========== CLIENTES ========== -->
-    <h2>Clientes</h2>
-    <button onclick="abrirModal('cliente')">➕ Nuevo Cliente</button>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>ID</th><th>Nombre</th><th>Documento</th><th>Email</th><th>Teléfono</th><th>Acciones</th>
-            </tr>
-            <tr th:each="c : ${clientes}">
-                <td th:text="${c.id}"></td>
-                <td th:text="${c.nombre}"></td>
-                <td th:text="${c.documento}"></td>
-                <td th:text="${c.email}"></td>
-                <td th:text="${c.telefono}"></td>
-                <td>
-                    <button onclick="editar('cliente', [[${c.id}]])">✏️</button>
-                    <button onclick="eliminar('cliente', [[${c.id}]])">🗑️</button>
-                </td>
-            </tr>
-        </table>
+    <div class="header">
+        <h1><i class="fas fa-store"></i> Sistema de Gestión de Tienda</h1>
+        <p th:text="${mensaje}">Panel de administración completo</p>
     </div>
 
-    <!-- ========== PRODUCTOS ========== -->
-    <h2>Productos</h2>
-    <button onclick="abrirModal('producto')">➕ Nuevo Producto</button>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>ID</th><th>Nombre</th><th>Precio</th><th>Stock</th><th>Activo</th><th>Acciones</th>
-            </tr>
-            <tr th:each="p : ${productos}">
-                <td th:text="${p.id}"></td>
-                <td th:text="${p.nombre}"></td>
-                <td th:text="${p.precio}"></td>
-                <td th:text="${p.stockMinimo}"></td>
-                <td th:text="${p.activo}"></td>
-                <td>
-                    <button onclick="editar('producto', [[${p.id}]])">✏️</button>
-                    <button onclick="eliminar('producto', [[${p.id}]])">🗑️</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+    <div class="main-content">
+        <!-- ========== CLIENTES ========== -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-users"></i> Clientes
+                </h2>
+                <button class="btn btn-primary" onclick="abrirModal('cliente')">
+                    <i class="fas fa-plus"></i> Nuevo Cliente
+                </button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Email</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="c : ${clientes}">
+                        <td th:text="${c.id}"></td>
+                        <td th:text="${c.nombre}"></td>
+                        <td th:text="${c.documento}"></td>
+                        <td th:text="${c.email}"></td>
+                        <td th:text="${c.telefono}"></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="editar('cliente', [[${c.id}]])">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminar('cliente', [[${c.id}]])">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <!-- ========== PROVEEDORES ========== -->
-    <h2>Proveedores</h2>
-    <button onclick="abrirModal('proveedor')">➕ Nuevo Proveedor</button>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>ID</th><th>Nombre</th><th>Teléfono</th><th>Producto</th><th>Acciones</th>
-            </tr>
-            <tr th:each="pr : ${proveedores}">
-                <td th:text="${pr.id}"></td>
-                <td th:text="${pr.Nombre}"></td>
-                <td th:text="${pr.Telefono}"></td>
-                <td th:text="${pr.producto.nombre}"></td>
-                <td>
-                    <button onclick="editar('proveedor', [[${pr.id}]])">✏️</button>
-                    <button onclick="eliminar('proveedor', [[${pr.id}]])">🗑️</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <!-- ========== PRODUCTOS ========== -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-box"></i> Productos
+                </h2>
+                <button class="btn btn-primary" onclick="abrirModal('producto')">
+                    <i class="fas fa-plus"></i> Nuevo Producto
+                </button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="p : ${productos}">
+                        <td th:text="${p.id}"></td>
+                        <td th:text="${p.nombre}"></td>
+                        <td th:text="${p.precio}"></td>
+                        <td th:text="${p.stockMinimo}"></td>
+                        <td>
+                                <span th:if="${p.activo}" style="color: #28a745; font-weight: bold;">
+                                    <i class="fas fa-check-circle"></i> Activo
+                                </span>
+                            <span th:unless="${p.activo}" style="color: #dc3545; font-weight: bold;">
+                                    <i class="fas fa-times-circle"></i> Inactivo
+                                </span>
+                        </td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="editar('producto', [[${p.id}]])">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminar('producto', [[${p.id}]])">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <!-- ========== USUARIOS ========== -->
-    <h2>Usuarios</h2>
-    <button onclick="abrirModal('usuario')">➕ Nuevo Usuario</button>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>ID</th><th>Nombre</th><th>Documento</th><th>Cargo</th><th>Teléfono</th><th>Acciones</th>
-            </tr>
-            <tr th:each="u : ${usuarios}">
-                <td th:text="${u.id}"></td>
-                <td th:text="${u.nombre}"></td>
-                <td th:text="${u.documento}"></td>
-                <td th:text="${u.cargo}"></td>
-                <td th:text="${u.telefono}"></td>
-                <td>
-                    <button onclick="editar('usuario', [[${u.id}]])">✏️</button>
-                    <button onclick="eliminar('usuario', [[${u.id}]])">🗑️</button>
-                </td>
-            </tr>
-        </table>
-    </div>
+        <!-- ========== PROVEEDORES ========== -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-truck"></i> Proveedores
+                </h2>
+                <button class="btn btn-primary" onclick="abrirModal('proveedor')">
+                    <i class="fas fa-plus"></i> Nuevo Proveedor
+                </button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Teléfono</th>
+                        <th>Producto</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="pr : ${proveedores}">
+                        <td th:text="${pr.id}"></td>
+                        <td th:text="${pr.Nombre}"></td>
+                        <td th:text="${pr.Telefono}"></td>
+                        <td th:text="${pr.producto != null ? pr.producto.nombre : 'Sin producto'}"></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="editar('proveedor', [[${pr.id}]])">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminar('proveedor', [[${pr.id}]])">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
 
-    <!-- ========== VENTAS ========== -->
-    <h2>Ventas</h2>
-    <button onclick="abrirModal('venta')">➕ Nueva Venta</button>
-    <div class="table-container">
-        <table>
-            <tr>
-                <th>ID</th><th>Fecha</th><th>Precio Venta</th><th>Cliente</th><th>Producto</th><th>Acciones</th>
-            </tr>
-            <tr th:each="v : ${ventas}">
-                <td th:text="${v.id}"></td>
-                <td th:text="${v.fecha}"></td>
-                <td th:text="${v.precioVenta}"></td>
-                <td th:text="${v.cliente.nombre}"></td>
-                <td th:text="${v.producto.nombre}"></td>
-                <td>
-                    <button onclick="editar('venta', [[${v.id}]])">✏️</button>
-                    <button onclick="eliminar('venta', [[${v.id}]])">🗑️</button>
-                </td>
-            </tr>
-        </table>
+        <!-- ========== USUARIOS ========== -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-user-tie"></i> Usuarios
+                </h2>
+                <button class="btn btn-primary" onclick="abrirModal('usuario')">
+                    <i class="fas fa-plus"></i> Nuevo Usuario
+                </button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Documento</th>
+                        <th>Cargo</th>
+                        <th>Teléfono</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="u : ${usuarios}">
+                        <td th:text="${u.id}"></td>
+                        <td th:text="${u.nombre}"></td>
+                        <td th:text="${u.documento}"></td>
+                        <td th:text="${u.cargo}"></td>
+                        <td th:text="${u.telefono}"></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="editar('usuario', [[${u.id}]])">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminar('usuario', [[${u.id}]])">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- ========== VENTAS ========== -->
+        <div class="section">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-shopping-cart"></i> Ventas
+                </h2>
+                <button class="btn btn-primary" onclick="abrirModal('venta')">
+                    <i class="fas fa-plus"></i> Nueva Venta
+                </button>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Fecha</th>
+                        <th>Precio</th>
+                        <th>Cliente</th>
+                        <th>Producto</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="v : ${ventas}">
+                        <td th:text="${v.id}"></td>
+                        <td th:text="${v.fecha}"></td>
+                        <td th:text="${v.precioVenta}"></td>
+                        <td th:text="${v.cliente != null ? v.cliente.nombre : 'Cliente eliminado'}"></td>
+                        <td th:text="${v.producto != null ? v.producto.nombre : 'Producto eliminado'}"></td>
+                        <td>
+                            <div class="actions">
+                                <button class="btn btn-edit" onclick="editar('venta', [[${v.id}]])">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-delete" onclick="eliminar('venta', [[${v.id}]])">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 </div>
 
 <!-- ========= MODAL GENÉRICO ========= -->
 <div id="modal" class="modal">
     <div class="modal-content">
-        <h3 id="modal-title"></h3>
+        <div class="modal-header">
+            <h3 id="modal-title" class="modal-title">Nuevo Registro</h3>
+            <button type="button" class="close-btn" onclick="cerrarModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+
         <form id="modal-form">
             <input type="hidden" id="entidad">
             <input type="hidden" id="id">
 
-            <div id="modal-fields">
-                <!-- Cliente -->
-                <div id="fields-cliente" style="display:none">
-                    <input placeholder="Nombre" id="nombre">
-                    <input placeholder="Documento" id="documento">
-                    <input placeholder="Email" id="email">
-                    <input placeholder="Teléfono" id="telefono">
+            <!-- Cliente -->
+            <div id="fields-cliente" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" for="cliente-nombre">Nombre</label>
+                    <input type="text" class="form-control" id="cliente-nombre" placeholder="Nombre completo" required>
                 </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-documento">Documento</label>
+                    <input type="text" class="form-control" id="cliente-documento" placeholder="Número de documento" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-email">Email</label>
+                    <input type="email" class="form-control" id="cliente-email" placeholder="correo@ejemplo.com" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cliente-telefono">Teléfono</label>
+                    <input type="tel" class="form-control" id="cliente-telefono" placeholder="Teléfono" required>
+                </div>
+            </div>
 
-                <!-- Producto -->
-                <div id="fields-producto" style="display:none">
-                    <input placeholder="Nombre" id="nombre">
-                    <input placeholder="Precio" id="precio" type="number">
-                    <input placeholder="Stock" id="stockMinimo" type="number">
-                    <select id="activo">
+            <!-- Producto -->
+            <div id="fields-producto" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" for="producto-nombre">Nombre</label>
+                    <input type="text" class="form-control" id="producto-nombre" placeholder="Nombre del producto" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="producto-precio">Precio</label>
+                    <input type="number" class="form-control" id="producto-precio" placeholder="0.00" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="producto-stockMinimo">Stock</label>
+                    <input type="number" class="form-control" id="producto-stockMinimo" placeholder="0" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="producto-activo">Estado</label>
+                    <select class="form-control" id="producto-activo" required>
+                        <option value="">Seleccione el estado</option>
                         <option value="true">Activo</option>
                         <option value="false">Inactivo</option>
                     </select>
                 </div>
+            </div>
 
-                <!-- Proveedor -->
-                <div id="fields-proveedor" style="display:none">
-                    <input placeholder="Nombre" id="Nombre">
-                    <input placeholder="Teléfono" id="Telefono">
-                    <select id="productoId">
-                        <option value="">Seleccione un producto</option>
-                        <option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}"></option>
-                    </select>
+            <!-- Proveedor -->
+            <div id="fields-proveedor" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" for="proveedor-Nombre">Nombre</label>
+                    <input type="text" class="form-control" id="proveedor-Nombre" placeholder="Nombre del proveedor" required>
                 </div>
-
-                <!-- Usuario -->
-                <div id="fields-usuario" style="display:none">
-                    <input placeholder="Nombre" id="nombre">
-                    <input placeholder="Documento" id="documento">
-                    <input placeholder="Cargo" id="cargo">
-                    <input placeholder="Teléfono" id="telefono">
+                <div class="form-group">
+                    <label class="form-label" for="proveedor-Telefono">Teléfono</label>
+                    <input type="tel" class="form-control" id="proveedor-Telefono" placeholder="Teléfono" required>
                 </div>
-
-                <!-- Venta -->
-                <div id="fields-venta" style="display:none">
-                    <input placeholder="Fecha" id="fecha" type="date">
-                    <input placeholder="Precio Venta" id="precioVenta" type="number">
-                    <select id="clienteId">
-                        <option value="">Seleccione un cliente</option>
-                        <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
-                    </select>
-                    <select id="productoId">
+                <div class="form-group">
+                    <label class="form-label" for="proveedor-productoId">Producto</label>
+                    <select class="form-control" id="proveedor-productoId" required>
                         <option value="">Seleccione un producto</option>
                         <option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}"></option>
                     </select>
                 </div>
             </div>
 
-            <button type="submit">Guardar</button>
-            <button type="button" onclick="cerrarModal()">Cancelar</button>
+            <!-- Usuario -->
+            <div id="fields-usuario" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" for="usuario-nombre">Nombre</label>
+                    <input type="text" class="form-control" id="usuario-nombre" placeholder="Nombre completo" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="usuario-documento">Documento</label>
+                    <input type="text" class="form-control" id="usuario-documento" placeholder="Número de documento" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="usuario-cargo">Cargo</label>
+                    <input type="text" class="form-control" id="usuario-cargo" placeholder="Cargo" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="usuario-telefono">Teléfono</label>
+                    <input type="tel" class="form-control" id="usuario-telefono" placeholder="Teléfono" required>
+                </div>
+            </div>
+
+            <!-- Venta -->
+            <div id="fields-venta" style="display:none">
+                <div class="form-group">
+                    <label class="form-label" for="venta-fecha">Fecha</label>
+                    <input type="date" class="form-control" id="venta-fecha" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="venta-precioVenta">Precio</label>
+                    <input type="number" class="form-control" id="venta-precioVenta" placeholder="0.00" step="0.01" min="0" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="venta-clienteId">Cliente</label>
+                    <select class="form-control" id="venta-clienteId" required>
+                        <option value="">Seleccione un cliente</option>
+                        <option th:each="c : ${clientes}" th:value="${c.id}" th:text="${c.nombre}"></option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="venta-productoId">Producto</label>
+                    <select class="form-control" id="venta-productoId" required>
+                        <option value="">Seleccione un producto</option>
+                        <option th:each="p : ${productos}" th:value="${p.id}" th:text="${p.nombre}"></option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-actions">
+                <button type="button" class="btn btn-secondary" onclick="cerrarModal()">
+                    Cancelar
+                </button>
+                <button type="submit" class="btn btn-primary">
+                    Guardar
+                </button>
+            </div>
         </form>
     </div>
 </div>
 
 <script>
     function abrirModal(entidad) {
-        document.getElementById('modal').style.display = 'flex';
+        document.getElementById('modal').classList.add('show');
         document.getElementById('modal-title').innerText = "Nuevo " + entidad;
         document.getElementById('entidad').value = entidad;
         document.getElementById('id').value = "";
@@ -213,18 +665,27 @@
     }
 
     function cerrarModal() {
-        document.getElementById('modal').style.display = 'none';
+        document.getElementById('modal').classList.remove('show');
     }
 
     function limpiarCampos() {
-        document.querySelectorAll("#modal-fields input, #modal-fields select").forEach(el => {
-            el.value = "";
+        document.querySelectorAll("#modal-fields input, #modal-fields select, .form-control").forEach(el => {
+            if (el.type !== 'hidden') {
+                el.value = "";
+            }
         });
     }
 
     function generarCampos(entidad) {
-        document.querySelectorAll("#modal-fields > div").forEach(div => div.style.display = "none");
+        document.querySelectorAll("[id^='fields-']").forEach(div => div.style.display = "none");
         document.getElementById("fields-" + entidad).style.display = "block";
+
+        // Configurar fecha actual para ventas
+        if (entidad === 'venta') {
+            const fechaInput = document.getElementById('venta-fecha');
+            const hoy = new Date().toISOString().split('T')[0];
+            fechaInput.value = hoy;
+        }
     }
 
     document.getElementById('modal-form').onsubmit = async function(e) {
@@ -233,7 +694,6 @@
         const entidad = document.getElementById('entidad').value;
         const id = document.getElementById('id').value;
 
-        // Mapear las entidades a sus endpoints correctos
         const endpoints = {
             'cliente': 'clientes',
             'producto': 'productos',
@@ -244,13 +704,14 @@
 
         let url = "/" + endpoints[entidad] + (id ? "/" + id : "");
         let method = id ? "PUT" : "POST";
-
         let body = {};
 
-        // Recoger todos los campos del formulario
+        // Recoger todos los campos del formulario activo con el prefijo correcto
+        const prefijo = entidad + "-";
         document.querySelectorAll("#fields-" + entidad + " input, #fields-" + entidad + " select").forEach(el => {
-            if(el.value) { // Solo incluir campos con valor
-                body[el.id] = el.value;
+            if(el.value && el.id.startsWith(prefijo)) {
+                const campo = el.id.replace(prefijo, '');
+                body[campo] = el.value;
             }
         });
 
@@ -258,31 +719,25 @@
         if(entidad === "venta") {
             body = {
                 fecha: body.fecha,
-                precioVenta: parseInt(body.precioVenta),
+                precioVenta: parseFloat(body.precioVenta) || 0,
                 cliente: { id: parseInt(body.clienteId) },
                 producto: { id: parseInt(body.productoId) }
             };
-            // Eliminar campos que no son parte de la entidad
-            delete body.clienteId;
-            delete body.productoId;
         } else if(entidad === "proveedor") {
             body = {
-                Nombre: body.Nombre,        // Mayúscula para coincidir con la entidad
-                Telefono: body.Telefono,    // Mayúscula para coincidir con la entidad
+                Nombre: body.Nombre,
+                Telefono: body.Telefono,
                 producto: { id: parseInt(body.productoId) }
             };
-            // Eliminar campos que no son parte de la entidad
-            delete body.productoId;
         } else if(entidad === "producto") {
             body = {
                 nombre: body.nombre,
-                precio: parseFloat(body.precio),
-                stockMinimo: parseInt(body.stockMinimo),
+                precio: parseFloat(body.precio) || 0,
+                stockMinimo: parseInt(body.stockMinimo) || 0,
                 activo: body.activo === "true"
             };
         }
 
-        // Si es actualización, incluir el ID
         if(id) {
             body.id = parseInt(id);
         }
@@ -308,7 +763,6 @@
 
     async function editar(entidad, id) {
         try {
-            // Usar el mapeo correcto de endpoints
             const endpoints = {
                 'cliente': 'clientes',
                 'producto': 'productos',
@@ -318,42 +772,36 @@
             };
 
             const resp = await fetch("/" + endpoints[entidad] + "/" + id);
-            if(!resp.ok) {
-                throw new Error("Error al cargar los datos");
-            }
+            if(!resp.ok) throw new Error("Error al cargar los datos");
 
             const data = await resp.json();
             abrirModal(entidad);
             document.getElementById('modal-title').innerText = "Editar " + entidad;
             document.getElementById('id').value = data.id;
 
-            // Llenar campos básicos
+            // Llenar campos básicos con el prefijo correcto
+            const prefijo = entidad + "-";
             Object.keys(data).forEach(k => {
-                const element = document.getElementById(k);
+                const element = document.getElementById(prefijo + k);
                 if(element && typeof data[k] !== 'object') {
                     element.value = data[k];
                 }
             });
 
-            // Manejar relaciones y campos especiales
+            // Manejar relaciones
             if(entidad === "venta") {
-                if(data.cliente) {
-                    document.getElementById('clienteId').value = data.cliente.id;
-                }
-                if(data.producto) {
-                    document.getElementById('productoId').value = data.producto.id;
+                if(data.cliente) document.getElementById('venta-clienteId').value = data.cliente.id;
+                if(data.producto) document.getElementById('venta-productoId').value = data.producto.id;
+                // Formatear fecha si es necesario
+                if(data.fecha) {
+                    const fecha = new Date(data.fecha);
+                    const fechaFormateada = fecha.toISOString().split('T')[0];
+                    document.getElementById('venta-fecha').value = fechaFormateada;
                 }
             } else if(entidad === "proveedor") {
-                // Mapear campos con nombres diferentes
-                if(data.Nombre) {
-                    document.getElementById('Nombre').value = data.Nombre;
-                }
-                if(data.Telefono) {
-                    document.getElementById('Telefono').value = data.Telefono;
-                }
-                if(data.producto) {
-                    document.getElementById('productoId').value = data.producto.id;
-                }
+                if(data.Nombre) document.getElementById('proveedor-Nombre').value = data.Nombre;
+                if(data.Telefono) document.getElementById('proveedor-Telefono').value = data.Telefono;
+                if(data.producto) document.getElementById('proveedor-productoId').value = data.producto.id;
             }
         } catch(error) {
             alert("Error al cargar los datos: " + error.message);
@@ -363,7 +811,6 @@
     async function eliminar(entidad, id) {
         if(confirm("¿Seguro que deseas eliminar este " + entidad + "?")) {
             try {
-                // Usar el mapeo correcto de endpoints
                 const endpoints = {
                     'cliente': 'clientes',
                     'producto': 'productos',
@@ -383,6 +830,20 @@
             }
         }
     }
+
+    // Cerrar modal con Escape
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            cerrarModal();
+        }
+    });
+
+    // Cerrar modal al hacer clic fuera
+    document.getElementById('modal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            cerrarModal();
+        }
+    });
 </script>
 </body>
 </html>
